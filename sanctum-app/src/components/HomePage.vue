@@ -5,11 +5,21 @@
       <h1>Posts</h1>
       <router-link to="/add" class="btn btn-primary mb-3">Add Post</router-link>
       <PostList :posts="posts" @delete-post="deletePost" />
+  <div>
+    <NavbarComponent />
+    <div class="container mt-4">
+      <h1>Posts</h1>
+      <router-link to="/add" class="btn btn-primary mb-3">Add Post</router-link>
+      <PostList :posts="posts" @delete-post="deletePost" />
     </div>
+  </div>
   </div>
 </template>
 
 <script>
+import NavbarComponent from "./NavbarComponent.vue";
+import PostList from "./PostList.vue";
+import store from "../store"; // Import the Vuex store
 import NavbarComponent from "./NavbarComponent.vue";
 import PostList from "./PostList.vue";
 import store from "../store"; // Import the Vuex store
