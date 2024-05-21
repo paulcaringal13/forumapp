@@ -1,24 +1,27 @@
 <template>
-  <div class="container mt-5 col-3">
-    <div class="row">
-      <h4>Enter your email and password</h4>
-      <form @submit.prevent="loginUser" class="col-12">
-        <div class="form-group mt-3">
+  <div className=" w-fit px-6 py-8 rounded-lg shadow-md bg-white">
+    <div className="flex flex-col gap-3 w-fit items-center">
+      <h4 className="text-xl font-bold">Login Account</h4>
+      <form
+        @submit.prevent="loginUser"
+        className="w-full flex flex-col space-y-3"
+      >
+        <div className="form-group">
           <input
             type="email"
-            class="form-control"
+            className="form-control w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-full"
             id="email"
             v-model="email"
             placeholder="Enter email"
             required
             @input="clearErrors"
           />
-          <small class="text-danger" v-if="errors">{{ errors }}</small>
+          <small className="text-danger" v-if="errors">{{ errors }}</small>
         </div>
-        <div class="form-group mt-3">
+        <div className="form-group">
           <input
             type="password"
-            class="form-control"
+            className="form-control w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-full"
             id="password"
             v-model="password"
             placeholder="Password"
@@ -26,16 +29,17 @@
             @input="clearErrors"
           />
         </div>
-        <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>
+        <button
+          type="submit"
+          className="bg-blue-500 h-full rounded-full text-white px-4 py-2"
+        >
+          Login
+        </button>
       </form>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <p class="mt-3 text-left">
-          Don't have an account?
-          <router-link to="/register">Register here!</router-link>
-        </p>
-      </div>
+      <p className=" text-sm">
+        Don't have an account?
+        <router-link to="/register">Register here!</router-link>
+      </p>
     </div>
   </div>
 </template>

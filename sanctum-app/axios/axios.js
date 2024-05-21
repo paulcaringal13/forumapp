@@ -18,9 +18,9 @@ axiosClient.interceptors.response.use(
   (error) => {
     const { response } = error;
     if (response.status === 401) {
-      //   localStorage.removeItem("token");
-      //   localStorage.removeItem("current_user");
-      //   localStorage.removeItem("user_access");
+      localStorage.removeItem("token");
+      localStorage.removeItem("current_user");
+      localStorage.removeItem("user_access");
       window.location.reload();
     }
 

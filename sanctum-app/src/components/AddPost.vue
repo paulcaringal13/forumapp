@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavbarComponent />
     <h2>Add New Post</h2>
     <form @submit.prevent="addPost">
       <div class="form-group">
@@ -29,15 +30,20 @@
 
 <script>
 import store from "../store"; // Import the Vuex store
+import NavbarComponent from "./NavbarComponent.vue";
 
 export default {
   name: "AddPost",
+  components: {
+    NavbarComponent,
+  },
   data() {
     return {
       title: "",
       content: "",
     };
   },
+
   methods: {
     addPost() {
       const newPost = {

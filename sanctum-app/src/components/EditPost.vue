@@ -1,5 +1,7 @@
 <template>
   <div>
+    <NavbarComponent />
+
     <h2>Edit Post</h2>
     <form @submit.prevent="editPost">
       <div class="form-group">
@@ -29,6 +31,7 @@
 
 <script>
 import store from "../store"; // Import the Vuex store
+import NavbarComponent from "./NavbarComponent.vue";
 
 export default {
   name: "EditPost",
@@ -38,6 +41,9 @@ export default {
       title: "",
       content: "",
     };
+  },
+  components: {
+    NavbarComponent,
   },
   computed: {
     post() {
