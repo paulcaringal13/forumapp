@@ -1,18 +1,34 @@
 <template>
-  <nav class="navbar">
-    <div class="container d-flex justify-content-end">
-        <ul class="nav">
-            <router-link to="/logout" class="col-6">Logout</router-link>
-        </ul> 
+  <div>
+    <NavbarComponent />
+    <div class="container mt-4">
+      <h1>Posts</h1>
+      <router-link to="/add" class="btn btn-primary mb-3">Add Post</router-link>
+      <PostList :posts="posts" @delete-post="deletePost" />
     </div>
-  </nav>
-  <!-- the router view is where all the routes are rendered -->
-  <router-view/> 
+  </div>
 </template>
 
 <script>
+import NavbarComponent from "./NavbarComponent.vue";
+import PostList from "./PostList.vue";
+import store from "../store"; // Import the Vuex store
 
 export default {
-    name: 'HomePage'
-}
+  name: "HomePage",
+  components: {
+    NavbarComponent,
+    PostList,
+  },
+  data() {
+    return {
+      posts: store.state.posts, // Store posts array in data
+    };
+  },
+  methods: {
+    deletePost(postId) {
+      store.dispatch("deletePost", postId); // Dispatch deletePost action from store
+    },
+  },
+};
 </script>
