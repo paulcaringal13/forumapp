@@ -1,6 +1,6 @@
 <template>
   <div
-    className="font-montserrat h-screen max-h-screen flex items-center justify-center bg-slate-100/75"
+    className="font-montserrat text-slate-800 h-screen max-h-screen flex items-center justify-center bg-slate-100/75"
   >
     <!-- the router view is where all the routes are rendered -->
     <router-view />

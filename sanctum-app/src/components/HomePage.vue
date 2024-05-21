@@ -1,11 +1,12 @@
 <template>
-  <div className=" bg-green-500 h-full w-full">
+  <div className="flex flex-col h-full w-full">
     <NavbarComponent />
-    <div class="bg-red-500">
+    <div className="flex justify-between mx-10 mt-4 text-xl font-semibold">
       <h1>Posts</h1>
-      <router-link to="/add" class="btn btn-primary mb-3"
-        >Add Postd</router-link
-      >
+      <router-link to="/add">Create Post</router-link>
+    </div>
+
+    <div class="flex flex-col py-3 grow mx-10">
       <PostList :posts="posts" @delete-post="deletePost" />
     </div>
   </div>
