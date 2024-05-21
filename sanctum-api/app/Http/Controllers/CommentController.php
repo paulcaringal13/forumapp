@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCommentRequest;
 use Illuminate\Http\Request;
 use Exception;
 
+// fixed
 class CommentController extends Controller
 {
     /**

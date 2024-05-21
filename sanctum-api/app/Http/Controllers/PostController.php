@@ -8,6 +8,8 @@ use App\Http\Requests\UpdatePostRequest;
 use Exception;
 use Illuminate\Http\Request;
 
+// fixed
+
 class PostController extends Controller
 {
     /**

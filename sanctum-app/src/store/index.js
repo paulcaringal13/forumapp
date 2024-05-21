@@ -51,3 +51,5 @@ export default createStore({
     getPostById: (state) => (id) => state.posts.find((post) => post.id === id),
   },
 });
+
+// Fixed

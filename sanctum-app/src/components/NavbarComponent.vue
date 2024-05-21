@@ -32,3 +32,5 @@ export default {
   name: "NavbarComponent",
 };
 </script>
+
+<!-- Fixed -->
