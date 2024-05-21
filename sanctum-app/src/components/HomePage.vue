@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div className=" bg-green-500 h-full w-full">
     <NavbarComponent />
     <div class="bg-red-500">
       <h1>Posts</h1>
