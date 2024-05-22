@@ -9,12 +9,10 @@ use App\Http\Controllers\CommentController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
-    Route::post('/create-post', [PostController::class, 'store']);
+    Route::get('/mypost', [PostController::class, 'show']);
+    Route::post('/postsCreate', [PostController::class, 'store']);
+
+    Route::delete('/logout', [AuthController::class, 'logout']);
 });
-
-
-
-

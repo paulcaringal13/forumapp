@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
 use Exception;
 use Illuminate\Http\Request;
-
-// fixed
 
 class PostController extends Controller
 {
@@ -20,8 +16,8 @@ class PostController extends Controller
     public function index()
     {
         try {
-            $posts = Post::with('comments', 'comments.user', 'user')->get();
-
+            $posts = Post::with('comments', 'comments.user', 'user')->orderBy('created_at', 'desc')->get();
+            
             return response([
                 "posts" => $posts
             ], 200);
@@ -31,32 +27,29 @@ class PostController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorePostRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         try {
-            Post::create([
-                'title' => $request->postTitle,
-                'body' => $request->postBody,
-                'user_id' => $request->user()->id
+            // Create the post and associate the user
+            $post = Post::create([
+                'title' => $request->title,
+                'body' => $request->content,
+                'user_id' => $request->user()->id,
             ]);
 
+            // Reload the post with the user relationship
+            $post->load('user');
+
+            return response([
+                "status" => "Success",
+                "post" => $post
+            ], 201); // HTTP status code 201 for resource creation success
 
         } catch (Exception $e) {
             return response([
@@ -66,48 +59,22 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
+    public function show(Request $request)
     {
-        //
+        try {
+            $myPosts = Post::where('user_id', $request->user()->id)->get();
+
+            $myPosts->load('user', 'comments', 'comments.user');
+            return response([
+                "status" => "Success",
+                "response" => $myPosts
+            ]);
+        } catch (Exception $e) {
+            return response([
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatePostRequest  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatePostRequest $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post)
-    {
-        //
-    }
 }
+

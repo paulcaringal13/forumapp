@@ -20,14 +20,39 @@
           :to="{ name: 'EditPost', params: { id: post.id } }"
           className="btn btn-secondary mr-2"
         >
+          <v-icon name="ri-eye-line" scale=".8" className="mr-2" />
+          <span className="ml-2 font-medium text-gray-400 text-xs"
+            >View Post</span
+          ></router-link
+        >
+        <button @click="setCommentBox(post)" className="btn btn-secondary mr-2">
           <v-icon name="ri-message-3-line" scale=".8" className="mr-2" />
           <span className="ml-2 font-medium text-gray-400 text-xs"
             >Comment</span
-          ></router-link
+          >
+        </button>
+        <div
+          v-if="selectedPost == post.id"
+          class="transform duration-500 transition-all relative"
+          :class="{
+            'scale-100': selectedPost == post.id,
+            'scale-0': selectedPost != post.id,
+          }"
         >
-        <!-- <button @click="deletePost(post.id)" className="btn btn-danger">
-          Delete
-        </button> -->
+          <input
+            type="text"
+            v-model="comment"
+            class="w-full px-3 py-2 text-xs outline outline-1 focus:outline-2 rounded-sm shadow-none transform duration-500 transition-all"
+            id="comment"
+            required
+          />
+
+          <button
+            className="absolute right-0 top-0 mt-[6px] mr-2 text-xs p-1 text-gray-400 hover:text-black"
+          >
+            Post comment
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -39,13 +64,20 @@ import store from "../store"; // Import the Vuex store
 export default {
   name: "PostList",
   props: ["posts"],
+  data() {
+    return {
+      comment: "",
+      selectedPost: { isCommentBoxShowing: false, post_id: 0 },
+    };
+  },
   methods: {
+    setCommentBox(post) {
+      this.comment = "";
+      this.selectedPost = post.id;
+    },
     deletePost(postId) {
       store.dispatch("deletePost", postId); // Dispatch deletePost action from store
     },
-  },
-  mounted() {
-    console.log(this.posts);
   },
 };
 </script>

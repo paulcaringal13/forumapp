@@ -28,16 +28,22 @@ export default {
     posts() {
       return this.$store.state.posts;
     },
+    currentUser() {
+      return this.$store.state.user;
+    },
   },
   mounted() {
     this.$store.dispatch("getPost");
+    console.log("homepaage", this.currentUser);
   },
+
   methods: {
     deletePost(postId) {
-      store.dispatch("deletePost", postId); // Dispatch deletePost action from store
+      store.commit("deletePost", postId); // Dispatch deletePost action from store
     },
   },
 };
 </script>
 
 <!-- Fixed -->
+

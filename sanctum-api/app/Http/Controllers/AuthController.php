@@ -61,10 +61,11 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('token-name')->plainTextToken;
 
-            return response()->json(['token' => $token], 201);
+            return response()->json(['token' => $token, 'user' => $user], 201);
         }
 
         // Authentication failed
         return response()->json(['message' => 'Invalid username or password'], 401);
     }
 }
+

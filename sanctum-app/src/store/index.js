@@ -3,15 +3,13 @@ import axiosClient from "../../axios/axios";
 
 export default createStore({
   state: {
-    posts: [
-      // { id: 1, title: "Post 1", content: "Content of post 1 🍆🧓" },
-      // { id: 2, title: "Post 2", content: "Content of post 2 🍑🍒" },
-    ],
+    user: {},
+    user_id: localStorage.getItem("id"),
+    posts: [],
+    selectedPost: {},
+    myPost: {},
   },
   mutations: {
-    ADD_POST(state, post) {
-      state.posts.push(post);
-    },
     EDIT_POST(state, updatedPost) {
       const index = state.posts.findIndex((post) => post.id === updatedPost.id);
       if (index !== -1) {
@@ -24,12 +22,15 @@ export default createStore({
     setPosts(state, posts) {
       state.posts = posts;
     },
+    setUser(state, currentUser) {
+      state.user = currentUser;
+    },
+    setMyPost(state, data) {
+      state.myPost = data;
+    },
   },
 
   actions: {
-    addPost({ commit }, post) {
-      commit("ADD_POST", post);
-    },
     editPost({ commit }, post) {
       commit("EDIT_POST", post);
     },
@@ -40,8 +41,19 @@ export default createStore({
       axiosClient
         .get("/posts")
         .then((res) => {
-          console.log(res.data.posts);
           commit("setPosts", res.data.posts);
+        })
+        .catch((err) => console.log(err));
+    },
+    setCurrentUser({ commit }, currentUser) {
+      commit("setUser", currentUser);
+    },
+
+    getMyPost({ commit }) {
+      axiosClient
+        .get("/mypost")
+        .then((res) => {
+          commit("setMyPost", res.data.response);
         })
         .catch((err) => console.log(err));
     },

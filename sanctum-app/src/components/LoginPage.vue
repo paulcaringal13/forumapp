@@ -44,6 +44,7 @@
   </div>
 </template>
 <script>
+// Import the Vuex store
 import axios from "axios";
 
 export default {
@@ -68,6 +69,8 @@ export default {
           // the token will be stored in the local storage to guard the routes
           // this will prevent to access the route without login
           localStorage.setItem("token", response.data.token);
+          localStorage.setItem("id", response.data.user.id);
+          this.setCurrentUser(response.data.user);
           this.$router.push("/home");
         }
       } catch (error) {
@@ -75,6 +78,9 @@ export default {
         // the errors will be displayed in the template using v-if directives
         this.errors = error.response.data.message;
       }
+    },
+    setCurrentUser(user) {
+      this.$store.dispatch("setCurrentUser", user);
     },
     clearErrors() {
       // Clear error message for the specified field
