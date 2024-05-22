@@ -1,35 +1,41 @@
 <template>
-  <div>
+  <div className="flex flex-col h-full w-full">
     <NavbarComponent />
-    <h2>Add New Post</h2>
-    <form @submit.prevent="addPost">
-      <div class="form-group">
-        <label for="title">Title</label>
+    <h2 className="mx-10 mt-4 text-xl font-semibold">Add New Post</h2>
+    <div
+      className="flex flex-col p-4 mx-10 my-4 grow gap-5 bg-white shadow-md rounded-lg"
+    >
+      <div className="flex flex-col grow gap-2">
+        <label for="title" className="text-xl font-semibold">Title:</label>
         <input
           type="text"
           v-model="title"
-          class="form-control"
+          className="form-control w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-md mx-1"
           id="title"
           required
         />
-      </div>
-      <div class="form-group">
-        <label for="content">Content</label>
+        <label for="content" className="text-xl font-semibold">Content:</label>
         <textarea
           v-model="content"
-          class="form-control"
+          className="form-control grow w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-md mx-1"
           id="content"
           rows="3"
           required
         ></textarea>
+        <button
+          @click="addPost"
+          className="w-fit px-5 py-2 bg-slate-800 text-white ml-auto rounded-lg shadow-md hover:bg-slate-700"
+        >
+          Add Post
+        </button>
       </div>
-      <button type="submit" class="btn btn-primary">Add Post</button>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
-import store from "../store"; // Import the Vuex store
+import axiosClient from "../../axios/axios";
+
 import NavbarComponent from "./NavbarComponent.vue";
 
 export default {
@@ -47,12 +53,23 @@ export default {
   methods: {
     addPost() {
       const newPost = {
-        id: Date.now(),
         title: this.title,
         content: this.content,
       };
-      store.dispatch("addPost", newPost); // Dispatch addPost action from store
-      this.$router.push("/home");
+
+      axiosClient
+        .post("/postsCreate", newPost)
+        .then((res) => {
+          console.log(res);
+
+          console.log(this.$store.state.posts);
+
+          this.$store.state.posts = res.data.posts;
+          setTimeout(() => {
+            this.$router.push("/home");
+          }, 2000);
+        })
+        .catch((err) => console.log(err)); // Dispatch addPost action from store
     },
   },
 };

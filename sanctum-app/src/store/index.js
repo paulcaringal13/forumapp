@@ -3,15 +3,20 @@ import axiosClient from "../../axios/axios";
 
 export default createStore({
   state: {
-    posts: [
-      // { id: 1, title: "Post 1", content: "Content of post 1 🍆🧓" },
-      // { id: 2, title: "Post 2", content: "Content of post 2 🍑🍒" },
-    ],
+    user: {
+      name: localStorage.getItem("name"),
+      id: localStorage.getItem("id"),
+      email: localStorage.getItem("email"),
+    },
+    posts: [],
+    selectedPost: {},
+    updatepost: {
+      postTitle: "",
+      postBody: "",
+    },
+    myPost: {},
   },
   mutations: {
-    ADD_POST(state, post) {
-      state.posts.push(post);
-    },
     EDIT_POST(state, updatedPost) {
       const index = state.posts.findIndex((post) => post.id === updatedPost.id);
       if (index !== -1) {
@@ -24,12 +29,18 @@ export default createStore({
     setPosts(state, posts) {
       state.posts = posts;
     },
+    setUser(state, currentUser) {
+      state.user = currentUser;
+    },
+    setMyPost(state, data) {
+      state.myPost = data;
+    },
+    setSelectedPost(state, data) {
+      state.selectedPost = data;
+    },
   },
 
   actions: {
-    addPost({ commit }, post) {
-      commit("ADD_POST", post);
-    },
     editPost({ commit }, post) {
       commit("EDIT_POST", post);
     },
@@ -40,10 +51,41 @@ export default createStore({
       axiosClient
         .get("/posts")
         .then((res) => {
-          console.log(res.data.posts);
           commit("setPosts", res.data.posts);
         })
         .catch((err) => console.log(err));
+    },
+    getUser({ commit }, user_id) {
+      axiosClient
+        .get(`/user/${user_id}`)
+        .then((res) => {
+          commit("setUser", res.data);
+          console.log("ginawa ko getuser", res.data);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    getSelectedPost({ commit }, postId) {
+      axiosClient
+        .get(`/viewpost/${postId}`)
+        .then((res) => {
+          commit("setSelectedPost", res.data);
+          console.log("ginawa ko", res.data);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    getMyPost({ commit }) {
+      axiosClient
+        .get("/mypost")
+        .then((res) => {
+          commit("setMyPost", res.data.response);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    setCurrentUser({ commit }, currentUser) {
+      commit("setUser", currentUser);
     },
   },
   getters: {
