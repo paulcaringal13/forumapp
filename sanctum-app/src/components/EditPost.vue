@@ -1,31 +1,35 @@
 <template>
-  <div>
+  <div className="flex flex-col h-full w-full">
     <NavbarComponent />
-
-    <h2>Edit Post</h2>
-    <form @submit.prevent="editPost">
-      <div class="form-group">
-        <label for="title">Title</label>
+    <h2 className="mx-10 mt-4 text-xl font-semibold">Edit Post</h2>
+    <div
+      className="flex flex-col p-4 mx-10 my-4 grow gap-5 bg-white shadow-md rounded-lg"
+    >
+      <form @submit.prevent="editPost" className="flex flex-col grow gap-2">
+        <label for="title" className="text-xl font-semibold">Title</label>
         <input
           type="text"
           v-model="title"
-          class="form-control"
+          className="form-control w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-md mx-1"
           id="title"
           required
         />
-      </div>
-      <div class="form-group">
-        <label for="content">Content</label>
+        <label for="content" className="text-xl font-semibold">Content</label>
         <textarea
           v-model="content"
-          class="form-control"
+          className="form-control grow w-full px-4 py-3 text-xs outline outline-1 focus:outline-2 rounded-md mx-1"
           id="content"
           rows="3"
           required
         ></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+        <button
+          type="submit"
+          className="w-fit px-5 py-2 bg-slate-800 text-white ml-auto rounded-lg shadow-md hover:bg-slate-700"
+        >
+          Save Changes
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -69,5 +73,3 @@ export default {
   },
 };
 </script>
-
-<!-- Fixed -->
