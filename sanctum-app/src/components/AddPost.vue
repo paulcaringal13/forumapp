@@ -56,7 +56,6 @@ export default {
         title: this.title,
         content: this.content,
       };
-      console.log(newPost);
 
       axiosClient
         .post("/postsCreate", newPost)
@@ -77,4 +76,3 @@ export default {
 </script>
 
 <!-- Fixed -->
-

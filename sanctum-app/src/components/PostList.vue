@@ -16,15 +16,12 @@
 
         <p className="text-sm text-gray-400">{{ post.body }}</p>
 
-        <router-link
-          :to="{ name: 'EditPost', params: { id: post.id } }"
-          className="btn btn-secondary mr-2"
-        >
+        <button @click="viewPost(post)" className="btn btn-secondary mr-2">
           <v-icon name="ri-eye-line" scale=".8" className="mr-2" />
           <span className="ml-2 font-medium text-gray-400 text-xs"
             >View Post</span
-          ></router-link
-        >
+          >
+        </button>
         <button @click="setCommentBox(post)" className="btn btn-secondary mr-2">
           <v-icon name="ri-message-3-line" scale=".8" className="mr-2" />
           <span className="ml-2 font-medium text-gray-400 text-xs"
@@ -71,6 +68,13 @@ export default {
     };
   },
   methods: {
+    viewPost(post) {
+      this.$store.state.selectedPost = post;
+      this.$store.state.updatepost.postTitle = post.title;
+      this.$store.state.updatepost.postBody = post.body;
+      localStorage.setItem("postId", post.id);
+      this.$router.push(`/viewpost/${this.$store.state.user.id}`);
+    },
     setCommentBox(post) {
       this.comment = "";
       this.selectedPost = post.id;
@@ -78,6 +82,9 @@ export default {
     deletePost(postId) {
       store.dispatch("deletePost", postId); // Dispatch deletePost action from store
     },
+  },
+  mounted() {
+    this.$store.dispatch("getUser", localStorage.getItem("id"));
   },
 };
 </script>

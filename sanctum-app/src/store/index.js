@@ -3,10 +3,17 @@ import axiosClient from "../../axios/axios";
 
 export default createStore({
   state: {
-    user: {},
-    user_id: localStorage.getItem("id"),
+    user: {
+      name: localStorage.getItem("name"),
+      id: localStorage.getItem("id"),
+      email: localStorage.getItem("email"),
+    },
     posts: [],
     selectedPost: {},
+    updatepost: {
+      postTitle: "",
+      postBody: "",
+    },
     myPost: {},
   },
   mutations: {
@@ -28,6 +35,9 @@ export default createStore({
     setMyPost(state, data) {
       state.myPost = data;
     },
+    setSelectedPost(state, data) {
+      state.selectedPost = data;
+    },
   },
 
   actions: {
@@ -45,8 +55,24 @@ export default createStore({
         })
         .catch((err) => console.log(err));
     },
-    setCurrentUser({ commit }, currentUser) {
-      commit("setUser", currentUser);
+    getUser({ commit }, user_id) {
+      axiosClient
+        .get(`/user/${user_id}`)
+        .then((res) => {
+          commit("setUser", res.data);
+          console.log("ginawa ko getuser", res.data);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    getSelectedPost({ commit }, postId) {
+      axiosClient
+        .get(`/viewpost/${postId}`)
+        .then((res) => {
+          commit("setSelectedPost", res.data);
+          console.log("ginawa ko", res.data);
+        })
+        .catch((err) => console.log(err));
     },
 
     getMyPost({ commit }) {
@@ -56,6 +82,10 @@ export default createStore({
           commit("setMyPost", res.data.response);
         })
         .catch((err) => console.log(err));
+    },
+
+    setCurrentUser({ commit }, currentUser) {
+      commit("setUser", currentUser);
     },
   },
   getters: {

@@ -27,6 +27,9 @@ class PostController extends Controller
             ], 500);
         }
     }
+
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -76,5 +79,49 @@ class PostController extends Controller
         }
     }
 
-}
 
+    public function getSelectedPost($id)
+    {
+        // Retrieve the post with comments and user using eager loading
+        $post = Post::with('comments.user', 'user')->findOrFail($id);
+
+        return response()->json($post);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $post = Post::findOrFail($id);
+            $update = $post->update([
+                'title' => $request->postTitle,
+                'body' => $request->postBody
+            ]);
+
+            return response([
+                "status" => "Success",
+                "response" => $update
+            ]);
+        } catch (Exception $e) {
+            return response([
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function destroy($id)
+    {
+        try {
+            Post::destroy($id);
+            return response([
+                "status" => "Success",
+                "response" => "Post Deleted"
+            ]);
+
+        } catch (Exception $e) {
+            return response([
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+}
