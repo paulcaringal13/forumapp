@@ -1,35 +1,62 @@
 import { createStore } from "vuex";
+import axiosClient from "../../axios/axios";
 
 export default createStore({
   state: {
-    posts: [
-      { id: 1, title: "Post 1", content: "Content of post 1 🍆🧓" },
-      { id: 2, title: "Post 2", content: "Content of post 2 🍑🍒" },
-    ],
+    user: {
+      name: localStorage.getItem("name"),
+      id: localStorage.getItem("id"),
+      email: localStorage.getItem("email"),
+    },
+    posts: [],
+    selectedPost: {},
+    updatepost: {
+      postTitle: "",
+      postBody: "",
+    },
+    myPost: {},
   },
   mutations: {
-    ADD_POST(state, post) {
-      state.posts.push(post);
+    setPosts(state, posts) {
+      state.posts = posts;
     },
-    EDIT_POST(state, updatedPost) {
-      const index = state.posts.findIndex((post) => post.id === updatedPost.id);
-      if (index !== -1) {
-        state.posts[index] = updatedPost;
-      }
+    setUser(state, currentUser) {
+      state.user = currentUser;
     },
-    DELETE_POST(state, postId) {
-      state.posts = state.posts.filter((post) => post.id !== postId);
+    setMyPost(state, data) {
+      state.myPost = data;
     },
   },
+
   actions: {
-    addPost({ commit }, post) {
-      commit("ADD_POST", post);
+    getPost({ commit }) {
+      axiosClient
+        .get("/posts")
+        .then((res) => {
+          commit("setPosts", res.data.posts);
+        })
+        .catch((err) => console.log(err));
     },
-    editPost({ commit }, post) {
-      commit("EDIT_POST", post);
+    getUser({ commit }, user_id) {
+      axiosClient
+        .get(`/user/${user_id}`)
+        .then((res) => {
+          commit("setUser", res.data);
+        })
+        .catch((err) => console.log(err));
     },
-    deletePost({ commit }, postId) {
-      commit("DELETE_POST", postId);
+
+    getMyPost({ commit }) {
+      axiosClient
+        .get("/mypost")
+        .then((res) => {
+          commit("setMyPost", res.data.response);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    setCurrentUser({ commit }, currentUser) {
+      commit("setUser", currentUser);
     },
   },
   getters: {
