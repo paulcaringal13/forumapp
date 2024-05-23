@@ -4,6 +4,14 @@
     <div className="flex justify-between mx-10 mt-4 text-xl font-semibold">
       <h1>My Posts</h1>
     </div>
+
+    <div v-if="posts.length == 0" class="flex flex-col py-3 grow mx-10">
+      <div
+        className="flex flex-col gap-5 bg-white shadow-md rounded-lg p-4 items-center justify-center font-extrabold"
+      >
+        You don't have a post yet.
+      </div>
+    </div>
     <div v-if="posts.length == undefined" class="flex flex-col py-3 grow mx-10">
       <div
         className="flex flex-col grow gap-5 bg-white shadow-md rounded-lg p-4 items-center justify-center"
@@ -27,7 +35,6 @@
 
 <script>
 import PostList from "./PostList.vue";
-import store from "../store"; // Import the Vuex store
 import NavbarComponent from "./NavbarComponent.vue";
 
 export default {
@@ -44,13 +51,6 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getMyPost");
-
-    console.log(this.posts.length0);
-  },
-  methods: {
-    deletePost(postId) {
-      store.dispatch("deletePost", postId); // Dispatch deletePost action from store
-    },
   },
 };
 </script>

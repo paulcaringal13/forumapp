@@ -9,8 +9,18 @@ import EditPost from "@/components/EditPost.vue";
 import ViewPost from "@/components/ViewPost.vue";
 
 const routes = [
-  { path: "/", component: LoginPage, name: "login" },
-  { path: "/register", component: RegisterPage, name: "register" },
+  {
+    path: "/",
+    component: LoginPage,
+    name: "login",
+ 
+  },
+  {
+    path: "/register",
+    component: RegisterPage,
+    name: "register",
+
+  },
   {
     path: "/home/:id",
     component: HomePage,
@@ -82,8 +92,9 @@ const routes = [
     name: "logout",
     component: LoginPage,
     beforeEnter: (to, from, next) => {
-      console.log("logout");
       localStorage.removeItem("token");
+      localStorage.removeItem("postId");
+      localStorage.removeItem("id");
       next("/");
     },
   },
@@ -95,5 +106,3 @@ const router = createRouter({
 });
 
 export default router;
-
-// Fixed
