@@ -23,15 +23,15 @@
             </h1>
           </div>
         </div>
-        <div
-          className="flex flex-col gap-1 px-6 pb-4 border-b-[1px] border-gray-400 drop-shadow-xl"
-        >
+        <div className="flex flex-col gap-1 px-6">
           <h3 className="font-extrabold text-xl">{{ currentPost.title }}</h3>
           <h2 className="font-medium text-sm">
             {{ currentPost.body }}
           </h2>
         </div>
-        <div className="border-b-[1px] border-gray-400 drop-shadow-xl p-2">
+        <div
+          className="border-b-[1px] border-gray-400 drop-shadow-xl px-2 pb-2"
+        >
           <div className="space-y-1">
             <h1 className="font-bold text-sm">
               <v-icon name="ri-message-3-line" scale="1" className="mr-2" />
@@ -53,14 +53,52 @@
               className="border-b-[1px] border-gray-400 drop-shadow-xl p-2"
             >
               <div className="space-y-1">
-                <h5 className="font-bold text-sm">
-                  <v-icon name="ri-user-3-fill" scale=".8" className="mr-2" />
-                  <span className="ml-2 font-medium text-gray-400">{{
-                    comment.user.name
-                  }}</span>
-                </h5>
+                <div className="w-full flex justify-between">
+                  <h5 className="font-bold text-sm">
+                    <v-icon name="ri-user-3-fill" scale=".8" className="mr-2" />
+                    <span className="ml-2 font-medium text-gray-400">{{
+                      comment.user.name
+                    }}</span>
+                  </h5>
+                  <div
+                    className="w-fit flex gap-2"
+                    v-if="comment.user.id === this.currentUser.id"
+                  >
+                    <button @click="openEditBox(comment)" className="">
+                      <span
+                        className="ml-2 font-medium text-gray-400 text-xs hover:text-black"
+                        >Edit</span
+                      >
+                    </button>
+                    <button @click="deleteComment(comment.id)" className="">
+                      <span
+                        className="ml-2 font-medium text-gray-400 text-xs hover:text-black"
+                        >Delete</span
+                      >
+                    </button>
+                  </div>
+                </div>
 
-                <p className="text-sm text-gray-400">
+                <div
+                  v-if="selectedComment.id == comment.id"
+                  class="transform duration-500 transition-all relative"
+                >
+                  <input
+                    type="text"
+                    v-model="selectedComment.comment_body"
+                    class="w-full px-3 py-2 text-xs outline outline-1 focus:outline-2 rounded-sm shadow-none transform duration-500 transition-all"
+                    id="comment"
+                    required
+                  />
+
+                  <button
+                    className="absolute right-0 top-0 mt-[6px] mr-2 text-xs p-1 text-gray-400 hover:text-black"
+                    @click="updateComment()"
+                  >
+                    Update comment
+                  </button>
+                </div>
+                <p className="text-sm text-gray-400" v-else>
                   {{ comment.comment_body }}
                 </p>
               </div>
@@ -68,7 +106,7 @@
           </div>
         </div>
 
-        <div>
+        <div className="relative">
           <h1 className="font-bold text-sm mb-1 mt-2">
             <v-icon name="ri-user-3-fill" scale=".8" className="mr-2" />
             <span className="ml-2  text-xs text-gray-400">{{
@@ -85,6 +123,7 @@
 
           <button
             className="absolute right-0 bottom-0 mb-2 mr-2 text-xs p-1 text-gray-400 hover:text-black"
+            @click="postComment()"
           >
             Post comment
           </button>
@@ -113,6 +152,7 @@ export default {
         body: "",
       },
       currentUser: {},
+      selectedComment: {},
     };
   },
   async mounted() {
@@ -120,7 +160,6 @@ export default {
       .get(`/user/${localStorage.getItem("id")}`)
       .then((res) => {
         this.currentUser = res.data;
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
 
@@ -128,71 +167,63 @@ export default {
       .get(`/viewpost/${localStorage.getItem("postId")}`)
       .then((res) => {
         this.comments = res.data.comments;
-        this.currentPost.title = res.data.title;
-        this.currentPost.body = res.data.body;
-        this.currentPost.user = res.data.user;
-        console.log(res.data);
+        this.currentPost = res.data;
       })
       .catch((err) => console.log(err));
   },
-  //   methods: {
-  //     async loadData() {
-  //       const data = await this.fetchData();
+  methods: {
+    postComment() {
+      const comment_data = {
+        post_id: this.currentPost.id,
+        comment_body: this.comment,
+      };
 
-  //       if (!data) {
-  //         console.log("Data not found");
-  //       } else {
-  //         console.log(data);
-  //       }
-  //       // After data is fetched, update component data
-  //
-  //     },
-  //     fetchData() {
-  //       return new Promise((resolve) => {
-  //         this.$store
-  //           .dispatch("getSelectedPost", localStorage.getItem("postId"))
-  //           .then(() =>
-  //             this.$store.dispatch("getUser", localStorage.getItem("id"))
-  //           )
-  //           .then(() => resolve());
-  //       });
-  //     },
+      axiosClient
+        .post("/commentPost", comment_data)
+        .then((res) => {
+          this.comments.push(res.data.response);
+          this.comment = "";
+        })
+        .catch((err) => console.log(err));
+    },
 
-  //   updatePost(id) {
+    updateComment() {
+      console.log(this.selectedComment);
+      axiosClient
+        .put(`/commentUpdate/${this.selectedComment.id}`, this.selectedComment)
+        .then((res) => {
+          this.currentPost.comments.forEach((comment) => {
+            if (comment.id === res.data.comment.id) {
+              comment.comment_body = res.data.comment.comment_body;
+            }
+          });
 
-  //       axiosClient.put(`/postsUpdate/${id}`, this.updatepostdata).then((res) => {
-  //           this.$store.state.selectedPost.title = this.updatepostdata.postTitle;
-  //           this.$store.state.selectedPost.body = this.updatepostdata.postBody;
-  //       }).catch((err) => console.log(err));
+          alert("Comment updated successfully!");
+          this.selectedComment = {};
+        })
+        .catch((err) => console.log(err));
+    },
 
-  //   },
-  //   deletePost(id) {
+    deleteComment(commentId) {
+      axiosClient
+        .delete(`/commentDelete/${commentId}`)
+        .then((res) => {
+          axiosClient
+            .get(`/viewpost/${localStorage.getItem("postId")}`)
+            .then((res) => {
+              this.comments = res.data.comments;
+              this.currentPost = res.data;
+            })
+            .catch((err) => console.log(err));
 
-  //       axiosClient.delete(`/postDelete/${id}`).then((res) => {
-  //           console.log(res.data);
-  //           this.$store.dispatch('getPost');
-  //           this.createToast('deleted post');
-  //           this.visibleDelete = false;
-  //           setTimeout(() => {
-  //               this.$router.push('/home');
-  //           }, 2000);
-  //       }).catch((err) => console.log(err));
+          alert(res.data.response);
+        })
+        .catch((err) => console.log(err));
+    },
 
-  //   },
-  //   postComment() {
-  //       const comment_data = {
-  //           post_id: this.posts.id,
-  //           comment_body: this.comment_body,
-  //       }
-
-  //       axiosClient.post('/commentPost', comment_data).then((res) => {
-
-  //           this.$store.dispatch('getPost');
-  //           this.posts.comments.push(res.data.response);
-  //           this.createToast('commented to post');
-  //           this.showComment = false;
-  //       }).catch((err) => console.log(err));
-  //   },
-  //   },
+    openEditBox(comment) {
+      this.selectedComment = comment;
+    },
+  },
 };
 </script>

@@ -38,7 +38,9 @@
       </form>
       <p className=" text-sm">
         Don't have an account?
-        <router-link to="/register">Register here!</router-link>
+        <router-link to="/register" className="text-blue-500"
+          >Register here!</router-link
+        >
       </p>
     </div>
   </div>
@@ -71,7 +73,6 @@ export default {
           console.log(response.data.user);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id", response.data.user.id);
-          localStorage.setItem("user", response.data.user);
           this.setCurrentUser(response.data.user);
           this.$router.push(`/home/${response.data.user.id}`);
         }

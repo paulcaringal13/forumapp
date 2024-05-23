@@ -115,7 +115,7 @@ class PostController extends Controller
             Post::destroy($id);
             return response([
                 "status" => "Success",
-                "response" => "Post Deleted"
+                "response" => "Post deleted successfully!   "
             ]);
 
         } catch (Exception $e) {

@@ -9,8 +9,32 @@ import EditPost from "@/components/EditPost.vue";
 import ViewPost from "@/components/ViewPost.vue";
 
 const routes = [
-  { path: "/", component: LoginPage, name: "login" },
-  { path: "/register", component: RegisterPage, name: "register" },
+  {
+    path: "/",
+    component: LoginPage,
+    name: "login",
+    beforeEnter: (to, from, next) => {
+      // check if user is logged in and redirect to login page if not
+      if (localStorage.getItem("token")) {
+        next(`/home/${localStorage.getItem("id")}`);
+      } else {
+        next("/");
+      }
+    },
+  },
+  {
+    path: "/register",
+    component: RegisterPage,
+    name: "register",
+    beforeEnter: (to, from, next) => {
+      // check if user is logged in and redirect to login page if not
+      if (localStorage.getItem("token")) {
+        next(`/home/${localStorage.getItem("id")}`);
+      } else {
+        next("/");
+      }
+    },
+  },
   {
     path: "/home/:id",
     component: HomePage,
@@ -82,8 +106,9 @@ const routes = [
     name: "logout",
     component: LoginPage,
     beforeEnter: (to, from, next) => {
-      console.log("logout");
       localStorage.removeItem("token");
+      localStorage.removeItem("postId");
+      localStorage.removeItem("id");
       next("/");
     },
   },

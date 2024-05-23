@@ -17,21 +17,21 @@ class CommentSeeder extends Seeder
     {
         DB::table('comments')->insert([
             [
-                'comment_body' => 'This is john comment',
+                'comment_body' => 'Hi! Nice post.',
                 'post_id' => 1,
                 'user_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'comment_body' => 'This is jericho comment.',
+                'comment_body' => 'Wow, nice.',
                 'post_id' => 2,
                 'user_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'comment_body' => 'This is great jericho.',
+                'comment_body' => 'This is great.',
                 'post_id' => 2,
                 'user_id' => 2,
                 'created_at' => now(),

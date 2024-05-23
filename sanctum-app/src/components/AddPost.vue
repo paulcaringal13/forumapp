@@ -60,13 +60,11 @@ export default {
       axiosClient
         .post("/postsCreate", newPost)
         .then((res) => {
-          console.log(res);
-
-          console.log(this.$store.state.posts);
-
           this.$store.state.posts = res.data.posts;
+          this.$store.dispatch("getPost");
+          alert("Post created successfully");
           setTimeout(() => {
-            this.$router.push("/home");
+            this.$router.push(`/home/${localStorage.getItem("id")}`);
           }, 2000);
         })
         .catch((err) => console.log(err)); // Dispatch addPost action from store

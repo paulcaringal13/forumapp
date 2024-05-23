@@ -30,7 +30,6 @@
 
 <script>
 import PostList from "./PostList.vue";
-import store from "../store"; // Import the Vuex store
 import NavbarComponent from "./NavbarComponent.vue";
 
 export default {
@@ -40,6 +39,7 @@ export default {
     NavbarComponent,
     PostList,
   },
+
   computed: {
     posts() {
       return this.$store.state.posts;
@@ -51,12 +51,6 @@ export default {
   mounted() {
     this.$store.dispatch("getPost");
     this.$store.dispatch("getUser", localStorage.getItem("id"));
-  },
-
-  methods: {
-    deletePost(postId) {
-      store.commit("deletePost", postId); // Dispatch deletePost action from store
-    },
   },
 };
 </script>

@@ -17,15 +17,15 @@ class PostSeeder extends Seeder
     {
         DB::table('posts')->insert([
             [
-                'title' => 'Jericho Post',
-                'body' => 'My name is jericho this is my first post.',
+                'title' => 'First post',
+                'body' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae dolore culpa doloremque quo laboriosam aspernatur?',
                 'user_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'John Doe Post',
-                'body' => 'My name is john this is my first post.',
+                'title' => 'Second Post',
+                'body' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt, eaque laudantium. Dicta eius minima repellendus, porro adipisci nulla maiores facere in, nobis dolorem neque quaerat.',
                 'user_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
