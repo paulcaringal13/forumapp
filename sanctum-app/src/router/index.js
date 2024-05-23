@@ -18,7 +18,7 @@ const routes = [
       if (localStorage.getItem("token")) {
         next(`/home/${localStorage.getItem("id")}`);
       } else {
-        next("/");
+        next();
       }
     },
   },
@@ -31,7 +31,7 @@ const routes = [
       if (localStorage.getItem("token")) {
         next(`/home/${localStorage.getItem("id")}`);
       } else {
-        next("/");
+        next();
       }
     },
   },
