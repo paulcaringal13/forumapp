@@ -13,6 +13,7 @@ const routes = [
     path: "/",
     component: LoginPage,
     name: "login",
+<<<<<<< HEAD
     beforeEnter: (to, from, next) => {
       // check if user is logged in and redirect to login page if not
       if (localStorage.getItem("token")) {
@@ -21,11 +22,15 @@ const routes = [
         next("/");
       }
     },
+=======
+ 
+>>>>>>> origin/edit-delete-frontend
   },
   {
     path: "/register",
     component: RegisterPage,
     name: "register",
+<<<<<<< HEAD
     beforeEnter: (to, from, next) => {
       // check if user is logged in and redirect to login page if not
       if (localStorage.getItem("token")) {
@@ -34,6 +39,9 @@ const routes = [
         next("/");
       }
     },
+=======
+
+>>>>>>> origin/edit-delete-frontend
   },
   {
     path: "/home/:id",
@@ -120,5 +128,3 @@ const router = createRouter({
 });
 
 export default router;
-
-// Fixed

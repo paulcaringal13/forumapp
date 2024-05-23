@@ -6,12 +6,36 @@
       className="border-b-[1px] border-gray-400 drop-shadow-xl p-2"
     >
       <div className="space-y-1">
-        <h5 className="font-bold text-sm">
-          <v-icon name="ri-user-3-fill" scale=".8" className="mr-2" />
-          <span className="ml-2 font-medium text-gray-400">{{
-            post.user.name
-          }}</span>
-        </h5>
+        <div className="flex justify-between">
+          <h5 className="font-bold text-sm">
+            <v-icon name="ri-user-3-fill" scale=".8" className="mr-2" />
+            <span className="ml-2 font-medium text-gray-400">{{
+              post.user.name
+            }}</span>
+          </h5>
+          <div className="w-fit flex gap-3" v-if="this.currentPage == 'posts'">
+            <button
+              @click="goToEdit(post.id)"
+              className="group hover:text-green-500"
+            >
+              <v-icon name="ri-edit-line" scale=".8" className="mr-2" />
+              <span
+                className="ml-2 font-medium text-gray-400 text-xs group-hover:text-green-500"
+                >Edit</span
+              >
+            </button>
+            <button
+              @click="deletePost(post)"
+              className="group hover:text-red-500"
+            >
+              <v-icon name="ri-delete-bin-7-line" scale=".8" className="mr-2" />
+              <span
+                className="ml-2 font-medium text-gray-400 text-xs group-hover:text-red-500"
+                >Delete</span
+              >
+            </button>
+          </div>
+        </div>
         <p className="font-bold text-black text-lg">{{ post.title }}</p>
 
         <p className="text-sm text-gray-400">{{ post.body }}</p>
@@ -46,6 +70,7 @@
 
           <button
             className="absolute right-0 top-0 mt-[6px] mr-2 text-xs p-1 text-gray-400 hover:text-black"
+            @click="postComment()"
           >
             Post comment
           </button>
@@ -56,7 +81,7 @@
 </template>
 
 <script>
-import store from "../store"; // Import the Vuex store
+import axiosClient from "../../axios/axios";
 
 export default {
   name: "PostList",
@@ -64,7 +89,9 @@ export default {
   data() {
     return {
       comment: "",
-      selectedPost: { isCommentBoxShowing: false, post_id: 0 },
+      selectedPost: 0,
+      user_id: localStorage.getItem("id"),
+      currentPage: this.$route.name,
     };
   },
   methods: {
@@ -79,12 +106,48 @@ export default {
       this.comment = "";
       this.selectedPost = post.id;
     },
-    deletePost(postId) {
-      store.dispatch("deletePost", postId); // Dispatch deletePost action from store
+
+    goToEdit(postId) {
+      this.$router.push(`/edit/${localStorage.getItem("id")}`);
+      localStorage.setItem("postId", postId);
+    },
+
+    postComment() {
+      const comment_data = {
+        post_id: this.selectedPost,
+        comment_body: this.comment,
+      };
+      axiosClient
+        .post("/commentPost", comment_data)
+        .then((res) => {
+          this.posts.forEach((post) => {
+            if (post.id === this.selectedPost) {
+              post.comments.push(res.data.response);
+            }
+          });
+          this.comment = "";
+          this.selectedPost = 0;
+          alert("Comment posted successfully, view post to see your comment.");
+        })
+        .catch((err) => console.log(err));
+    },
+
+    deletePost(post) {
+      axiosClient
+        .delete(`/postDelete/${post.id}`)
+        .then((res) => {
+          console.log(res.data);
+          alert(res.data.response);
+          this.$store.dispatch("getPost");
+          this.$store.dispatch("getMyPost");
+        })
+        .catch((err) => console.log(err));
     },
   },
   mounted() {
     this.$store.dispatch("getUser", localStorage.getItem("id"));
+
+    console.log();
   },
 };
 </script>

@@ -17,15 +17,6 @@ export default createStore({
     myPost: {},
   },
   mutations: {
-    EDIT_POST(state, updatedPost) {
-      const index = state.posts.findIndex((post) => post.id === updatedPost.id);
-      if (index !== -1) {
-        state.posts[index] = updatedPost;
-      }
-    },
-    DELETE_POST(state, postId) {
-      state.posts = state.posts.filter((post) => post.id !== postId);
-    },
     setPosts(state, posts) {
       state.posts = posts;
     },
@@ -35,18 +26,9 @@ export default createStore({
     setMyPost(state, data) {
       state.myPost = data;
     },
-    setSelectedPost(state, data) {
-      state.selectedPost = data;
-    },
   },
 
   actions: {
-    editPost({ commit }, post) {
-      commit("EDIT_POST", post);
-    },
-    deletePost({ commit }, postId) {
-      commit("DELETE_POST", postId);
-    },
     getPost({ commit }) {
       axiosClient
         .get("/posts")
@@ -60,17 +42,6 @@ export default createStore({
         .get(`/user/${user_id}`)
         .then((res) => {
           commit("setUser", res.data);
-          console.log("ginawa ko getuser", res.data);
-        })
-        .catch((err) => console.log(err));
-    },
-
-    getSelectedPost({ commit }, postId) {
-      axiosClient
-        .get(`/viewpost/${postId}`)
-        .then((res) => {
-          commit("setSelectedPost", res.data);
-          console.log("ginawa ko", res.data);
         })
         .catch((err) => console.log(err));
     },
